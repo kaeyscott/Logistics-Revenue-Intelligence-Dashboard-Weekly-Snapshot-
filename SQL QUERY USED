@@ -1,0 +1,114 @@
+--WEEKLY TOTALY SALES QUERY
+
+SELECT 
+DATENAME(WEEKDAY, Shipment.DateCreated) AS DayOfWeek,
+Count(Shipment.Waybill) as TotalShipment,
+sum(Shipment.GrandTotal) as TotalRevenue, 
+State.StateName as StateName, 
+country.CountryName as CountryName
+FROM Shipment
+INNER JOIN ServiceCentre on Shipment.[DepartureServiceCentreId] = ServiceCentre.ServiceCentreId
+INNER JOIN Invoice ON Invoice.Waybill = Shipment.Waybill
+INNER JOIN Station on Station.StationId = ServiceCentre.StationId
+ INNER JOIN State on State.StateId = Station.StateId
+INNER JOIN Country ON Country.CountryId = Shipment.DepartureCountryId
+WHERE Shipment.IsCancelled = 0 
+and Invoice.PaymentStatus =1 
+AND DATEPART(WEEK, shipment.DateCreated) = DATEPART(WEEK, GETDATE())
+	AND YEAR(shipment.DateCreated) = YEAR(GETDATE())
+	group By country.CountryName,DATENAME(WEEKDAY, shipment.DateCreated),State.StateName
+UNION
+SELECT DATENAME(WEEKDAY, p.DateCreated) AS DayOfWeek,
+Count(p.Waybill) as TotalShipment,
+sum(p.GrandTotal) as TotalRevenue, 
+State.StateName as StateName, 
+country.CountryName as CountryName
+FROM PreShipmentMobile P 
+INNER JOIN Country ON Country.CountryId = p.CountryId
+INNER JOIN Station on Station.StationId = p.SenderStationId
+INNER JOIN State on State.StateId = Station.StateId
+where  ZoneMapping =1 and IsFromAgility = 0 and p.IsCancelled = 0 
+AND DATEPART(WEEK, p.DateCreated) = DATEPART(WEEK, GETDATE())
+	AND YEAR(p.DateCreated) = YEAR(GETDATE())
+	group By country.CountryName,DATENAME(WEEKDAY, p.DateCreated),state.StateName
+
+--WEEKLY IMPORT
+
+SELECT DATENAME(WEEKDAY, S.DateCreated) AS DayOfWeek,
+s.Waybill,
+s.GrandTotal,
+Country.CountryName 
+FROM Shipment s
+INNER JOIN Country on S.[DepartureCountryId] = Country.CountryId
+INNER JOIN Invoice ON Invoice.Waybill = S.Waybill
+where IsCancelled=0 
+and s.IsInternational = 1
+and InternationalShipmentType = 0 
+and DestinationCountryId = 1 
+and Invoice.PaymentStatus =1
+and country.CountryName != 'NIGERIA'
+AND DATEPART(WEEK, S.DateCreated) = DATEPART(WEEK, GETDATE())
+AND YEAR(S.DateCreated) = YEAR(GETDATE())
+
+UNION
+SELECT DATENAME(WEEKDAY, S.DateCreated) AS DayOfWeek,
+s.Waybill,
+s.GrandTotal,
+Country.CountryName
+FROM Shipment s
+INNER JOIN Country on S.[DepartureCountryId] = Country.CountryId 
+INNER JOIN Invoice ON Invoice.Waybill = S.Waybill
+where DepartureCountryId = 76  
+and DestinationCountryId = 1 
+and Invoice.PaymentStatus =1 
+AND DATEPART(WEEK, S.DateCreated) = DATEPART(WEEK, GETDATE())
+AND YEAR(S.DateCreated) = YEAR(GETDATE())
+
+--WEEKLY EXPORT
+
+SELECT DATENAME(WEEKDAY, S.DateCreated) AS DayOfWeek,
+s.Waybill,
+s.GrandTotal,
+Country.CountryName 
+FROM Shipment s
+INNER JOIN Country on S.[DepartureCountryId] = Country.CountryId
+INNER JOIN Invoice ON Invoice.Waybill = S.Waybill
+where IsCancelled=0 
+and s.IsInternational = 1
+and InternationalShipmentType = 0 
+and DestinationCountryId = 1 
+and Invoice.PaymentStatus =1
+and country.CountryName != 'NIGERIA'
+AND DATEPART(WEEK, S.DateCreated) = DATEPART(WEEK, GETDATE())
+AND YEAR(S.DateCreated) = YEAR(GETDATE())
+
+UNION
+SELECT DATENAME(WEEKDAY, S.DateCreated) AS DayOfWeek,
+s.Waybill,
+s.GrandTotal,
+Country.CountryName
+FROM Shipment s
+INNER JOIN Country on S.[DepartureCountryId] = Country.CountryId 
+INNER JOIN Invoice ON Invoice.Waybill = S.Waybill
+where DepartureCountryId = 76  
+and DestinationCountryId = 1 
+and Invoice.PaymentStatus =1 
+AND DATEPART(WEEK, S.DateCreated) = DATEPART(WEEK, GETDATE())
+AND YEAR(S.DateCreated) = YEAR(GETDATE())
+
+--WEEKLY CORPORATE QUERY
+
+SELECT 
+DATENAME(WEEKDAY, S.DateCreated) AS DayOfWeek,
+count(S.Waybill) as TotalShipment,
+Sum(S.GrandTotal) as TotalRevenue
+FROM Shipment s
+INNER JOIN Company c on S.CustomerCode = C.CustomerCode
+WHERE C.AssignedCustomerRep IS NULL 
+and C.CompanyType = 0 
+AND DATEPART(WEEK, S.DateCreated) = DATEPART(WEEK, GETDATE())
+AND YEAR(S.DateCreated) = YEAR(GETDATE())
+and IsCancelled=0
+Group By DATENAME(WEEKDAY, S.DateCreated)
+
+	
