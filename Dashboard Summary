@@ -1,0 +1,35 @@
+# Logistics-Revenue-Intelligence-Dashboard-Weekly-Snapshot-
+To analyze and present weekly logistics revenue performance across countries, states, and service centers, with specific focus on shipment types and revenue breakdowns for executive insights.
+
+🔧 1. Data Integration:
+Connected multiple tables (such as Shipment, Invoice, ServiceCentre, Station, etc.).
+Applied data cleansing: filtering out non-consignable centers, non-public stations, deleted or invalid shipments.
+Excluded specific waybills and locations (like CHINA, SPINTEX, etc.) not relevant for this analysis.
+
+📊 2. Revenue Metrics Visualization:
+Calculated:
+Total Revenue across all locations.
+Corporate Revenue (likely filtered based on a customer type or service category).
+Total Export & Import Shipments counts.
+Used card visuals for high-level KPIs to offer a quick glance at key metrics.
+
+🌍 3. Country-Level Revenue Breakdown:
+Built a matrix table summarizing GO Standard Revenue by country.
+Added a secondary table for Total Revenue by Country.
+Created a donut chart for Import Revenue by Location, with relative percentages (e.g., UK: 74.92%, Canada: 25.08%).
+
+🏙️ 4. State-Level Revenue Analysis:
+Displayed the Top 10 Nigerian States by Revenue in a table, ranked by total revenue.
+E.g., Lagos leads with ₦28M+, followed by FCT and Rivers.
+
+🏢 5. Service Center Performance:
+I Created a bar chart visual of Centers by Revenue.Centers like Ikorodu, Ajah, Gwarimpa are top performers (each bringing in over ₦1.5M+).
+Scrollable chart accommodates more than 10 locations.
+📅 6. Time-Based Filtering:
+Included a Weekday Name slicer to enable filtering revenue performance based on the day of the week (e.g., Monday to Sunday performance).
+
+💡 Extra Insight:
+I used DATENAME(MONTH, s.DateCreated) and MONTH(s.DateCreated) for monthly breakdowns when needed.
+I Ensured chronological ordering for date-based reporting.
+
+
